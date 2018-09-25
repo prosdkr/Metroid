@@ -21,20 +21,24 @@ namespace Metroid
 
 
 
-        public static int SamusPositionX { get; set; } = 0;
+        public static int SamusPositionX { get; set; } = 100;
         public static int SamusPositionY { get; set; } = 0;
+
+        public static int SamusPreviousPositionX { get; set; } = SamusPositionX;
+        public static int SamusPreviousPositionY { get; set; } = 0;
+
         public static int SamusSpeedX { get; set; } = 0;
         public static int SamusSpeedY { get; set; } = 0;
 
         public static FacingDirection SamusFacing { get; set; } = FacingDirection.LEFT;
-
+        public static FacingDirection PreviousFacing { get; set; } = FacingDirection.LEFT;
 
 
         public enum FacingDirection{LEFT, RIGHT};
 
 
 
-        public static int MoveSpeed { get; set; } = 10;
+        public static int MoveSpeed { get; set; } = 5;
 
 
         public static double AngleBetweenTwoPoints(Point p1, Point p2)

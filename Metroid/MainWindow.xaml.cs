@@ -21,6 +21,7 @@ namespace Metroid
     /// </summary>
     public partial class MainWindow : Window
     {
+        KeyboardController kbc;
 
         public MainWindow()
         {
@@ -38,38 +39,56 @@ namespace Metroid
 
             this.ResizeMode = ResizeMode.NoResize;
 
-            this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+            EventHandler eh = new EventHandler(KeyboardFunction);
+            kbc = new KeyboardController(this, eh);
+
 
         }
 
-        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+
+
+
+        private void KeyboardFunction(object sender, EventArgs e)
         {
-            if (e.Key == Key.D) //Right
+            if ( kbc.KeyDown(Key.D)) //Right
             {
                 Constants.SamusFacing = Constants.FacingDirection.RIGHT;
+                if (Constants.SamusFacing != Constants.PreviousFacing)
+                {
+                    Constants.PreviousFacing = Constants.FacingDirection.RIGHT;
+                    Constants.State = 0;
+                }
+                Constants.SamusPreviousPositionX = Constants.SamusPositionX;
                 Constants.SamusPositionX += Constants.MoveSpeed;
-                Constants.State = 0;
+
             }
-            if (e.Key == Key.A) //Left
+            if ( kbc.KeyDown(Key.A)) //Left
             {
                 Constants.SamusFacing = Constants.FacingDirection.LEFT;
+                if (Constants.SamusFacing != Constants.PreviousFacing)
+                {
+                    Constants.PreviousFacing = Constants.FacingDirection.LEFT;
+                    Constants.State = 0;
+                }
+                Constants.SamusPreviousPositionX = Constants.SamusPositionX;
                 Constants.SamusPositionX -= Constants.MoveSpeed;
-                Constants.State = 0;
+
             }
-            if (e.Key == Key.W) //Up
+            if (kbc.KeyDown(Key.W)) //Up
             {
 
             }
-            if (e.Key == Key.S) //Down
+            if (kbc.KeyDown(Key.D)) //Down
             {
 
             }
-            //throw new NotImplementedException();
         }
+
+
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
-
+        
             Point mousePosition = Mouse.GetPosition(this);
             Console.WriteLine("Mouse at: " + mousePosition);
 
@@ -116,9 +135,34 @@ namespace Metroid
                 Canvas.SetTop(LeftRun, Constants.SamusPositionY);
                 Canvas.SetLeft(LeftRun, Constants.SamusPositionX);
 
-            }
-            Constants.State += 1;
 
+
+            }
+            if (Constants.SamusPositionX != Constants.SamusPreviousPositionX)
+            {
+
+                Constants.State += 2;
+               
+            }
+            else if (Constants.SamusPositionX == Constants.SamusPreviousPositionX && Constants.SamusFacing == Constants.FacingDirection.LEFT)
+            {
+                BitmapSource left = new BitmapImage(new Uri(@"C:\Users\prosdkr\Desktop\Metroid\Metroid\Assets\FaceLeft.png"));
+                Constants.State = 0;
+                LeftRun.Source = left;
+            }
+            else if (Constants.SamusPositionX == Constants.SamusPreviousPositionX && Constants.SamusFacing == Constants.FacingDirection.RIGHT)
+            {
+                BitmapSource right = new BitmapImage(new Uri(@"C:\Users\prosdkr\Desktop\Metroid\Metroid\Assets\FaceRight.png"));
+                Constants.State = 0;
+                LeftRun.Source = right;
+            }
+
+
+            //else if (Constants.SamusFacing == Constants.FacingDirection.RIGHT)
+            //{
+            //    BitmapSource bs = new BitmapImage(new Uri(@"C:\Users\prosdkr\Desktop\Metroid\Metroid\Assets\FaceLeft.png"));
+            //    LeftRun.Source = bs;
+            //}
         }
 
 
